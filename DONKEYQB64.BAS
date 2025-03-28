@@ -1,17 +1,36 @@
+'==============
+ 
+' **** Donkey ****
+ 
+'THIS IS ONLY AN ADAPTATION FROM QuickBasic DONKEY.BAS TO QB64
+'Adapted Because DONKEY.BAS (QuickBasic) run so fast when compile with QB64
+ 
+'**************
+'Used QuickBasic DONKEY.BAS (from https://web.archive.org/web/20050405104141/http://www.jujusoft.com/drivey/DONKEYQB.BAS.html) as base
+'Used GW-BASIC DONKEY.BAS (from http://peyre.x10.mx/GWBASIC/) as guide
+'Used "PC-BASIC" (https://robhagemans.github.io/pcbasic/) to run GW-BASIC DONKEY.BAS
+ 
+'Added some DELAYs to make the program run like GW-BASIC version (on PC-BASIC)
+ 
+'TO DO:
+' * If possible, Make the game sound dont delay (For example when you press space)
+ 
+'===============
+ 
 REM The IBM Personal Computer Donkey
 REM Version 1.10 (C)Copyright IBM Corp 1981, 1982
 REM Licensed Material - Program Property of IBM
-DEF SEG : POKE 106, 0
+DEF SEG: POKE 106, 0
 SAMPLES$ = "NO"
 DIM CAR%(900)
 GOTO 1010
 SAMPLES$ = "YES"
-1010 KEY OFF: SCREEN 0, 1: COLOR 15, 0, 0: WIDTH 40: CLS : LOCATE 5, 19: PRINT "IBM"
+1010 KEY OFF: SCREEN 0, 1: COLOR 15, 0, 0: WIDTH 40: CLS: LOCATE 5, 19: PRINT "IBM"
 LOCATE 7, 12, 0: PRINT "Personal Computer"
 COLOR 10, 0: LOCATE 10, 9, 0: PRINT CHR$(213) + STRING$(21, 205) + CHR$(184)
-LOCATE 11, 9, 0: PRINT CHR$(179) + " DONKEY " + CHR$(179)
+LOCATE 11, 9, 0: PRINT CHR$(179) + "       DONKEY        " + CHR$(179)
 LOCATE 12, 9, 0: PRINT CHR$(179) + STRING$(21, 32) + CHR$(179)
-LOCATE 13, 9, 0: PRINT CHR$(179) + " Version 1.10 " + CHR$(179)
+LOCATE 13, 9, 0: PRINT CHR$(179) + "    Version 1.10     " + CHR$(179)
 LOCATE 14, 9, 0: PRINT CHR$(212) + STRING$(21, 205) + CHR$(190)
 COLOR 15, 0: LOCATE 17, 4, 0: PRINT "(C) Copyright IBM Corp 1981, 1982"
 COLOR 14, 0: LOCATE 23, 7, 0: PRINT "Press space bar to continue"
@@ -22,8 +41,8 @@ IF CMD$ = CHR$(27) THEN GOTO 1298
 IF CMD$ = " " THEN GOTO 1160
 GOTO 1110
 1160 DEF SEG = 0
-IF (PEEK(&H410) AND &H30) <> &H30 THEN DEF SEG : GOTO 1291
-WIDTH 80: CLS : LOCATE 3, 1
+IF (PEEK(&H410) AND &H30) <> &H30 THEN DEF SEG: GOTO 1291
+WIDTH 80: CLS: LOCATE 3, 1
 PRINT "HOLD IT!"
 PRINT "YOU'RE NOT USING THE COLOR/GRAPHICS MONITOR ADAPTER!"
 PRINT "THIS PROGRAM USES GRAPHICS AND REQUIRES THAT ADAPTER."
@@ -42,7 +61,7 @@ GOTO 1300
 1295 COLOR 31, 0, 0
 PRINT "THIS PROGRAM REQUIRES ADVANCED BASIC -- USE COMMAND 'BASICA'": COLOR 15, 0, 0: FOR I = 1 TO 9000: NEXT: RESUME 1298
 1298 ON ERROR GOTO 0
-SCREEN 0, 1: COLOR 7, 0, 0: CLS : END
+SCREEN 0, 1: COLOR 7, 0, 0: CLS: END
 1300 REM
 COLOR 0
 DEFINT A-Y
@@ -73,14 +92,18 @@ CY = 105: CX = 105
 LINE (100, 0)-(100, 199): LINE (180, 0)-(180, 199)
 1670 LOCATE 5, 6: PRINT SD: LOCATE 5, 31: PRINT SM
 CY = CY - 4: IF CY < 60 THEN 2230
-PUT (CX, CY), CAR%, PRESET
+PUT (CX, CY), CAR%(), PRESET
 DX = 105 + 42 * INT(RND * 2)
 FOR Y = (RND * -4) * 8 TO 124 STEP 6
-SOUND 20000, 1
-A$ = INKEY$: IF A$ = CHR$(27) THEN 1298 ELSE POKE 106, 0: IF LEN(A$) > 0 THEN LINE (CX, CY)-(CX + 28, CY + 44), 0, BF: CX = 252 - CX: PUT (CX, CY), CAR%, PRESET: SOUND 200, 1
-IF Y >= 3 THEN PUT (DX, Y), DNK%, PSET
-IF CX = DX AND Y + 25 >= CY THEN 2060
-IF Y AND 3 THEN PUT (140, 6), B%
+ 
+    'Delay added
+    _DELAY 0.05
+ 
+    SOUND 20000, 0.9 'Modified SOUND Duration
+    A$ = INKEY$: IF A$ = CHR$(27) THEN 1298 ELSE POKE 106, 0: IF LEN(A$) > 0 THEN LINE (CX, CY)-(CX + 28, CY + 44), 0, BF: CX = 252 - CX: PUT (CX, CY), CAR%(), PRESET: SOUND 200, 1
+    IF Y >= 3 THEN PUT (DX, Y), DNK%(), PSET
+    IF CX = DX AND Y + 25 >= CY THEN 2060
+    IF Y AND 3 THEN PUT (140, 6), B%()
 NEXT: LINE (DX, 124)-(DX + 32, 149), 0, BF: GOTO 1670
 1780 CLS
 DRAW "S8C3"
@@ -96,7 +119,7 @@ DRAW "BD2BL2D1R1U1L1BR2R1D1L1U1"
 LINE (0, 0)-(40, 60), , B
 PAINT (1, 1)
 REM DIM CAR%(900)
-GET (1, 1)-(29, 45), CAR%
+GET (1, 1)-(28, 44), CAR%() 'Modified "29" and "45" for a line that appeared on the side of the car
 RETURN
 1940 CLS
 DRAW "S08"
@@ -108,25 +131,34 @@ DRAW "D3L1U5M-2,3U1"
 PAINT (21, 14), 3
 PRESET (37, 10): PRESET (40, 10)
 PRESET (37, 11): PRESET (40, 11)
-GET (13, 0)-(45, 25), DNK%
+GET (13, 0)-(45, 25), DNK%()
 RETURN
 2060 SD = SD + 1: LOCATE 14, 6: PRINT "BOOM!"
-GET (DX, Y)-(DX + 16, Y + 25), D1%
+GET (DX, Y)-(DX + 16, Y + 25), D1%()
 D1X = DX: D1Y = Y: D2X = DX + 17
-GET (DX + 17, Y)-(DX + 31, Y + 25), D2%
-GET (CX, CY)-(CX + 14, CY + 44), C1%
-GET (CX + 15, CY)-(CX + 28, CY + 44), C2%
+GET (DX + 17, Y)-(DX + 31, Y + 25), D2%()
+GET (CX, CY)-(CX + 14, CY + 44), C1%()
+GET (CX + 15, CY)-(CX + 28, CY + 44), C2%()
 C1X = CX: C1Y = CY: C2X = CX + 15
 FOR P = 6 TO 0 STEP -1: Z = 1 / (2 ^ P): Z1 = 1 - Z
-PUT (C1X, C1Y), C1%: PUT (C2X, C1Y), C2%
-PUT (D1X, D1Y), D1%: PUT (D2X, D1Y), D2%
-C1X = CX * Z1: D1Y = Y * Z1: C2X = C2X + (291 - C2X) * Z
-D1X = DX * Z1: C1Y = C1Y + (155 - C1Y) * Z: D2X = D2X + (294 - D2X) * Z
-PUT (C1X, C1Y), C1%: PUT (C2X, C1Y), C2%
-PUT (D1X, D1Y), D1%: PUT (D2X, D1Y), D2%
+ 
+    'Delay added too
+    _DELAY 0.20
+ 
+    PUT (C1X, C1Y), C1%(): PUT (C2X, C1Y), C2%()
+    PUT (D1X, D1Y), D1%(): PUT (D2X, D1Y), D2%()
+    C1X = CX * Z1: D1Y = Y * Z1: C2X = C2X + (291 - C2X) * Z
+    D1X = DX * Z1: C1Y = C1Y + (155 - C1Y) * Z: D2X = D2X + (294 - D2X) * Z
+    PUT (C1X, C1Y), C1%(): PUT (C2X, C1Y), C2%()
+    PUT (D1X, D1Y), D1%(): PUT (D2X, D1Y), D2%()
 SOUND 37 + RND * 200, 4: NEXT
 FOR Y = 1 TO 2000: NEXT
-CLS : GOTO 1540
+ 
+'More Delay
+_DELAY 0.25
+ 
+CLS: GOTO 1540
 2230 SM = SM + 1: LOCATE 7, 25: PRINT "Donkey loses!"
 FOR Y = 1 TO 1000: NEXT
-CLS : GOTO 1540
+CLS: GOTO 1540
+ 
