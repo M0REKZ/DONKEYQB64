@@ -19,187 +19,187 @@
  
 '===============
  
-REM The IBM Personal Computer Donkey
-REM Version 1.10 (C)Copyright IBM Corp 1981, 1982
-REM Licensed Material - Program Property of IBM
-DEF SEG: POKE 106, 0
+Rem The IBM Personal Computer Donkey
+Rem Version 1.10 (C)Copyright IBM Corp 1981, 1982
+Rem Licensed Material - Program Property of IBM
+Def Seg: Poke 106, 0
 SAMPLES$ = "NO"
-DIM CAR%(900)
-GOSUB StartScreen 'GOTO 1010
+$Resize:Stretch
+Dim CAR%(900)
+GoSub StartScreen 'GOTO 1010
 SAMPLES$ = "YES"
  
  
 StartGraphic:
-REM
-COLOR 0
-DEFINT A-Y
-SCREEN 1, 0: COLOR 8, 1
-DIM Q%(500)
-DIM D1%(150), D2%(150), C1%(200), C2%(200)
-DIM DNK%(300)
-GOSUB MakeDonkey
-GOSUB MakeCar
-CLS
-DIM B%(300)
-FOR I = 2 TO 300: B%(I) = -16384 + 192: NEXT
+Rem
+Color 0
+DefInt A-Y
+Screen 1, 0: Color 8, 1
+Dim Q%(500)
+Dim D1%(150), D2%(150), C1%(200), C2%(200)
+Dim DNK%(300)
+GoSub MakeDonkey
+GoSub MakeCar
+Cls
+Dim B%(300)
+For I = 2 To 300: B%(I) = -16384 + 192: Next
 B%(0) = 2: B%(1) = 193
  
-WHILE 1
-   1540 REM
-    CX = 110: CLS
-    LINE (0, 0)-(305, 199), , B
-    LINE (6, 6)-(97, 195), 1, BF
-    LINE (183, 6)-(305, 195), 1, BF
-    LOCATE 3, 5: PRINT "Donkey"
-    LOCATE 3, 29: PRINT "Driver"
-    LOCATE 19, 25: PRINT "Press Space ";
-    LOCATE 20, 25: PRINT "Bar to switch";
-    LOCATE 21, 25: PRINT "lanes ";
-    LOCATE 23, 25: PRINT "Press ESC ";
-    LOCATE 24, 25: PRINT "to exit ";
-    FOR Y = 4 TO 199 STEP 20: LINE (140, Y)-(140, Y + 10): NEXT
+While 1
+    1540 Rem
+    CX = 110: Cls
+    Line (0, 0)-(305, 199), , B
+    Line (6, 6)-(97, 195), 1, BF
+    Line (183, 6)-(305, 195), 1, BF
+    Locate 3, 5: Print "Donkey"
+    Locate 3, 29: Print "Driver"
+    Locate 19, 25: Print "Press Space ";
+    Locate 20, 25: Print "Bar to switch";
+    Locate 21, 25: Print "lanes ";
+    Locate 23, 25: Print "Press ESC ";
+    Locate 24, 25: Print "to exit ";
+    For Y = 4 To 199 Step 20: Line (140, Y)-(140, Y + 10): Next
     CY = 105: CX = 105
-    LINE (100, 0)-(100, 199): LINE (180, 0)-(180, 199)
-    DO '1670
-        LOCATE 5, 6: PRINT SD: LOCATE 5, 31: PRINT SM
-        CY = CY - 4: IF CY < 60 THEN GOSUB DonkeyLoss: EXIT DO '2230
-        PUT (CX, CY), CAR%(), PRESET
-        DX = 105 + 42 * INT(RND * 2)
-        FOR Y = (RND * -4) * 8 TO 124 STEP 6
+    Line (100, 0)-(100, 199): Line (180, 0)-(180, 199)
+    Do '1670
+        Locate 5, 6: Print SD: Locate 5, 31: Print SM
+        CY = CY - 4: If CY < 60 Then GoSub DonkeyLoss: Exit Do '2230
+        Put (CX, CY), CAR%(), PReset
+        DX = 105 + 42 * Int(Rnd * 2)
+        For Y = (Rnd * -4) * 8 To 124 Step 6
  
             'Delay added
-            _DELAY 0.05
+            _Delay 0.05
  
-            SOUND 20000, 0.9 'Modified SOUND Duration
-            A$ = INKEY$: IF A$ = CHR$(27) THEN GOSUB Escape ELSE POKE 106, 0:
-            IF LEN(A$) > 0 THEN LINE (CX, CY)-(CX + 28, CY + 44), 0, BF: CX = 252 - CX: PUT (CX, CY), CAR%(), PRESET: SOUND 200, 1
-            IF Y >= 3 THEN PUT (DX, Y), DNK%(), PSET
-            IF CX = DX AND Y + 25 >= CY THEN GOSUB Collision: EXIT DO '2060
-            IF Y AND 3 THEN PUT (140, 6), B%()
-        NEXT
-        : LINE (DX, 124)-(DX + 32, 149), 0, BF:
-    LOOP 'GOTO 1670
-WEND
-RETURN
+            Sound 20000, 0.9 'Modified SOUND Duration
+            A$ = InKey$: If A$ = Chr$(27) Then GoSub Escape Else Poke 106, 0:
+            If Len(A$) > 0 Then Line (CX, CY)-(CX + 28, CY + 44), 0, BF: CX = 252 - CX: Put (CX, CY), CAR%(), PReset: Sound 200, 1
+            If Y >= 3 Then Put (DX, Y), DNK%(), PSet
+            If CX = DX And Y + 25 >= CY Then GoSub Collision: Exit Do '2060
+            If Y And 3 Then Put (140, 6), B%()
+        Next
+        : Line (DX, 124)-(DX + 32, 149), 0, BF:
+    Loop 'GOTO 1670
+Wend
+Return
  
 Collision:
-SD = SD + 1: LOCATE 14, 6: PRINT "BOOM!"
-GET (DX, Y)-(DX + 16, Y + 25), D1%()
+SD = SD + 1: Locate 14, 6: Print "BOOM!"
+Get (DX, Y)-(DX + 16, Y + 25), D1%()
 D1X = DX: D1Y = Y: D2X = DX + 17
-GET (DX + 17, Y)-(DX + 31, Y + 25), D2%()
-GET (CX, CY)-(CX + 14, CY + 44), C1%()
-GET (CX + 15, CY)-(CX + 28, CY + 44), C2%()
+Get (DX + 17, Y)-(DX + 31, Y + 25), D2%()
+Get (CX, CY)-(CX + 14, CY + 44), C1%()
+Get (CX + 15, CY)-(CX + 28, CY + 44), C2%()
 C1X = CX: C1Y = CY: C2X = CX + 15
-FOR P = 6 TO 0 STEP -1: Z = 1 / (2 ^ P): Z1 = 1 - Z
+For P = 6 To 0 Step -1: Z = 1 / (2 ^ P): Z1 = 1 - Z
  
     'Delay added too
-    _DELAY 0.20
+    _Delay 0.20
  
-    PUT (C1X, C1Y), C1%(): PUT (C2X, C1Y), C2%()
-    PUT (D1X, D1Y), D1%(): PUT (D2X, D1Y), D2%()
+    Put (C1X, C1Y), C1%(): Put (C2X, C1Y), C2%()
+    Put (D1X, D1Y), D1%(): Put (D2X, D1Y), D2%()
     C1X = CX * Z1: D1Y = Y * Z1: C2X = C2X + (291 - C2X) * Z
     D1X = DX * Z1: C1Y = C1Y + (155 - C1Y) * Z: D2X = D2X + (294 - D2X) * Z
-    PUT (C1X, C1Y), C1%(): PUT (C2X, C1Y), C2%()
-    PUT (D1X, D1Y), D1%(): PUT (D2X, D1Y), D2%()
-    SOUND 37 + RND * 200, 4:
-NEXT
-FOR Y = 1 TO 2000: NEXT
+    Put (C1X, C1Y), C1%(): Put (C2X, C1Y), C2%()
+    Put (D1X, D1Y), D1%(): Put (D2X, D1Y), D2%()
+    Sound 37 + Rnd * 200, 4:
+Next
+'FOR Y = 1 TO 2000: NEXT
+_Delay 0.25
  
-'More Delay
-_DELAY 0.25
- 
-CLS: 'GOTO 1540
-RETURN
+Cls: 'GOTO 1540
+Return
  
 DonkeyLoss:
-SM = SM + 1: LOCATE 7, 25: PRINT "Donkey loses!"
-FOR Y = 1 TO 1000: NEXT
-CLS: 'GOTO 1540
-RETURN
+SM = SM + 1: Locate 7, 25: Print "Donkey loses!"
+'FOR Y = 1 TO 1000: NEXT
+_Delay 0.75
+Cls: 'GOTO 1540
+Return
  
 StartScreen:
-KEY OFF: SCREEN 0, 1: COLOR 15, 0, 0: WIDTH 40: CLS: LOCATE 5, 19: PRINT "IBM"
-LOCATE 7, 12, 0: PRINT "Personal Computer"
-COLOR 10, 0: LOCATE 10, 9, 0: PRINT CHR$(213) + STRING$(21, 205) + CHR$(184)
-LOCATE 11, 9, 0: PRINT CHR$(179) + "       DONKEY        " + CHR$(179)
-LOCATE 12, 9, 0: PRINT CHR$(179) + STRING$(21, 32) + CHR$(179)
-LOCATE 13, 9, 0: PRINT CHR$(179) + "    Version 1.10     " + CHR$(179)
-LOCATE 14, 9, 0: PRINT CHR$(212) + STRING$(21, 205) + CHR$(190)
-COLOR 15, 0: LOCATE 17, 4, 0: PRINT "(C) Copyright IBM Corp 1981, 1982"
-COLOR 14, 0: LOCATE 23, 7, 0: PRINT "Press space bar to continue"
-DO WHILE INKEY$ = ""
-    CMD$ = INKEY$
-    IF CMD$ = CHR$(27) THEN GOSUB Escape 'GOTO 1298
-    IF CMD$ = " " THEN GOSUB TestAdapter 'GOTO 1160
-LOOP
-RETURN
+Key Off: Screen 0, 1: Color 15, 0, 0: Width 40: Cls: Locate 5, 19: Print "IBM"
+Locate 7, 12, 0: Print "Personal Computer"
+Color 10, 0: Locate 10, 9, 0: Print Chr$(213) + String$(21, 205) + Chr$(184)
+Locate 11, 9, 0: Print Chr$(179) + "       DONKEY        " + Chr$(179)
+Locate 12, 9, 0: Print Chr$(179) + String$(21, 32) + Chr$(179)
+Locate 13, 9, 0: Print Chr$(179) + "    Version 1.10     " + Chr$(179)
+Locate 14, 9, 0: Print Chr$(212) + String$(21, 205) + Chr$(190)
+Color 15, 0: Locate 17, 4, 0: Print "(C) Copyright IBM Corp 1981, 1982"
+Color 14, 0: Locate 23, 7, 0: Print "Press space bar to continue"
+Do While InKey$ = ""
+    CMD$ = InKey$
+    If CMD$ = Chr$(27) Then GoSub Escape 'GOTO 1298
+    If CMD$ = " " Then GoSub TestAdapter 'GOTO 1160
+Loop
+Return
  
 TestAdapter:
-DEF SEG = 0
-IF (PEEK(&H410) AND &H30) = &H30 THEN
-    WIDTH 80: CLS: LOCATE 3, 1
-    PRINT "HOLD IT!"
-    PRINT "YOU'RE NOT USING THE COLOR/GRAPHICS MONITOR ADAPTER!"
-    PRINT "THIS PROGRAM USES GRAPHICS AND REQUIRES THAT ADAPTER."
-    PRINT "PRESS THE SPACE BAR TO CONTINUE."
-    DEF SEG
-    DO WHILE INKEY$ = ""
-        CMD$ = INKEY$
-        IF CMD$ = CHR$(27) THEN GOSUB Escape 'GOTO 1298
-        IF CMD$ = " " THEN GOSUB Escape 'GOTO 1298
-    LOOP
-ELSE
-    DEF SEG: GOSUB TestBasic 'GOTO 1291
-    GOSUB StartGraphic
-END IF
-RETURN
+Def Seg = 0
+If (Peek(&H410) And &H30) = &H30 Then
+    Width 80: Cls: Locate 3, 1
+    Print "HOLD IT!"
+    Print "YOU'RE NOT USING THE COLOR/GRAPHICS MONITOR ADAPTER!"
+    Print "THIS PROGRAM USES GRAPHICS AND REQUIRES THAT ADAPTER."
+    Print "PRESS THE SPACE BAR TO CONTINUE."
+    Def Seg
+    Do While InKey$ = ""
+        CMD$ = InKey$
+        If CMD$ = Chr$(27) Then GoSub Escape 'GOTO 1298
+        If CMD$ = " " Then GoSub Escape 'GOTO 1298
+    Loop
+Else
+    Def Seg: GoSub TestBasic 'GOTO 1291
+    GoSub StartGraphic
+End If
+Return
  
 Escape:
-ON ERROR GOTO 0
-SCREEN 0, 1: COLOR 7, 0, 0: CLS: END
-RETURN
+On Error GoTo 0
+Screen 0, 1: Color 7, 0, 0: Cls: End
+Return
  
 TestBasic:
-KEY OFF
-ON ERROR GOTO WarningBASICA '1295
-PLAY "p16"
-RETURN
+Key Off
+On Error GoTo WarningBASICA '1295
+Play "p16"
+Return
  
 WarningBASICA:
-COLOR 31, 0, 0
-PRINT "THIS PROGRAM REQUIRES ADVANCED BASIC -- USE COMMAND 'BASICA'": COLOR 15, 0, 0: FOR I = 1 TO 9000: NEXT:
-RESUME Escape '1298
+Color 31, 0, 0
+Print "THIS PROGRAM REQUIRES ADVANCED BASIC -- USE COMMAND 'BASICA'": Color 15, 0, 0: For I = 1 To 9000: Next:
+Resume Escape '1298
  
 MakeDonkey:
-CLS
-DRAW "S08"
-DRAW "BM14,18"
-DRAW "M+2,-4R8M+1,-1U1M+1,+1M+2,-1"
-DRAW "M-1,1M+1,3M-1,1M-1,-2M-1,2"
-DRAW "D3L1U3M-1,1D2L1U2L3D2L1U2M-1,-1"
-DRAW "D3L1U5M-2,3U1"
-PAINT (21, 14), 3
-PRESET (37, 10): PRESET (40, 10)
-PRESET (37, 11): PRESET (40, 11)
-GET (13, 0)-(45, 25), DNK%()
-RETURN
+Cls
+Draw "S08"
+Draw "BM14,18"
+Draw "M+2,-4R8M+1,-1U1M+1,+1M+2,-1"
+Draw "M-1,1M+1,3M-1,1M-1,-2M-1,2"
+Draw "D3L1U3M-1,1D2L1U2L3D2L1U2M-1,-1"
+Draw "D3L1U5M-2,3U1"
+Paint (21, 14), 3
+PReset (37, 10): PReset (40, 10)
+PReset (37, 11): PReset (40, 11)
+Get (13, 0)-(45, 25), DNK%()
+Return
  
 MakeCar:
-CLS
-DRAW "S8C3"
-DRAW "BM12,1r3m+1,3d2R1ND2u1r2d4l2u1l1"
-DRAW "d7R1nd2u2r3d6l3u2l1d3m-1,1l3"
-DRAW "m-1,-1u3l1d2l3u6r3d2nd2r1u7l1d1l2"
-DRAW "u4r2d1nd2R1U2"
-DRAW "M+1,-3"
-DRAW "BD10D2R3U2M-1,-1L1M-1,1"
-DRAW "BD3D1R1U1L1BR2R1D1L1U1"
-DRAW "BD2BL2D1R1U1L1BR2R1D1L1U1"
-DRAW "BD2BL2D1R1U1L1BR2R1D1L1U1"
-LINE (0, 0)-(40, 60), , B
-PAINT (1, 1)
-REM DIM CAR%(900)
-GET (1, 1)-(28, 44), CAR%() 'Modified "29" and "45" for a line that appeared on the side of the car
-RETURN
+Cls
+Draw "S8C3"
+Draw "BM12,1r3m+1,3d2R1ND2u1r2d4l2u1l1"
+Draw "d7R1nd2u2r3d6l3u2l1d3m-1,1l3"
+Draw "m-1,-1u3l1d2l3u6r3d2nd2r1u7l1d1l2"
+Draw "u4r2d1nd2R1U2"
+Draw "M+1,-3"
+Draw "BD10D2R3U2M-1,-1L1M-1,1"
+Draw "BD3D1R1U1L1BR2R1D1L1U1"
+Draw "BD2BL2D1R1U1L1BR2R1D1L1U1"
+Draw "BD2BL2D1R1U1L1BR2R1D1L1U1"
+Line (0, 0)-(40, 60), , B
+Paint (1, 1)
+Rem DIM CAR%(900)
+Get (1, 1)-(28, 44), CAR%() 'Modified "29" and "45" for a line that appeared on the side of the car
+Return
  
  
